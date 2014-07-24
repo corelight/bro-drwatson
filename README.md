@@ -21,3 +21,12 @@ system manufacturer and model.
 
 This script also feed information to the "Hardware" Bro script
 that logs information about particular hardware discovered.
+
+Installation
+------------
+
+::
+
+	cd <prefix>/share/bro/site/
+	git clone --recursive https://github.com/broala/bro-drwatson.git drwatson
+	echo "@load drwatson" >> local.bro
