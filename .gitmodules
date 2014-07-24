@@ -1,3 +1,3 @@
 [submodule "vendor/bro-hardware"]
 	path = vendor/bro-hardware
-	url = https://github.com/sethhall/bro-hardware.git
+	url = https://github.com/broala/bro-hardware.git
