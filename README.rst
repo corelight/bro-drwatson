@@ -6,7 +6,7 @@ Dr. Watson catcher script for Bro.
 Overview
 --------
 
-Microsoft sends diagnotic information back to themselves through
+Microsoft sends diagnostic information back to themselves through
 a mechism named Dr. Watson.  The initial "StageOne" is unencrypted
 and sent over HTTP so it's visible to Bro.  This script takes 
 the StageOne messages and parses all available information out of
