@@ -12,10 +12,10 @@ and sent over HTTP so it's visible to Bro.  This script takes
 the StageOne messages and parses all available information out of
 them to create a series of logs.
 
-dr_watson_crash.log logs information whenever software crashes 
+``dr_watson_crash.log`` logs information whenever software crashes 
 happen such as the application that crashed and why it crashed.
 
-dr_watson_platform.log logs information about platforms discovered
+``dr_watson_platform.log`` logs information about platforms discovered
 from watson messages which could include information about the 
 system manufacturer and model.
 
@@ -27,6 +27,5 @@ Installation
 
 ::
 
-	cd <prefix>/share/bro/site/
-	git clone --recursive https://github.com/broala/bro-drwatson.git drwatson
-	echo "@load drwatson" >> local.bro
+	bro-pkg refresh
+	bro-pkg install bro/corelight/bro-drwatson
