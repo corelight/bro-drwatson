@@ -1,2 +1,2 @@
-@load ../vendor/bro-hardware
+@load packages/bro-hardware
 @load ./main
