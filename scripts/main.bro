@@ -102,7 +102,7 @@ function hex_to_time(hex: string): time
 
 function fix_file_name(fname: string): string
 	{
-	local parts = split_all(fname, /_/);
+	local parts = split_string_all(fname, /_/);
 	if ( /[eE][xX][eE]/ == parts[|parts|] ||
 	     /[dD][lL][lL]/ == parts[|parts|] )
 		{
@@ -113,14 +113,14 @@ function fix_file_name(fname: string): string
 
 function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 	{
-	local parts = split_all(uri, /\//);
+	local parts = split_string_all(uri, /\//);
 
 	if ( parts[5] == "Generic" )
 		{
 		if ( parts[7] in software_parsed_generics )
 			{
 			local fname = fix_file_name(parts[9]);
-			local version_numbers = split_n(parts[11], /_/, F, 4);
+			local version_numbers = split_string_n(parts[11], /_/, F, 4);
 
 			local v: Software::Version;
 			if ( 4 in version_numbers && version_numbers[4] != "" )
@@ -142,7 +142,7 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 		if ( /^PnP/ in  parts[7] && /^..._VID_/ in parts[11] )
 			{
 			# It's a hardware disclosure.
-			local vid_pid_parts = split_n(parts[11], /_/, F, 5);
+			local vid_pid_parts = split_string_n(parts[11], /_/, F, 5);
 			if ( |vid_pid_parts| >= 5 )
 				{
 				local vid = vid_pid_parts[3];
@@ -188,7 +188,7 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 		                     $app=app, $mod=mod,
 		                     $exception_code=exception_codes[parts[17]]);
 
-		local more_parts = split1(parts[19], /\.htm\?/);
+		local more_parts = split_string1(parts[19], /\.htm\?/);
 		if ( 1 in more_parts )
 			{
 			ci$fault_offset = more_parts[1];
@@ -202,10 +202,10 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 		}
 
 	local p = PlatformInfo($ts=network_time(), $host=id$orig_h);
-	local arg_parts = split1(uri, /\?/);
+	local arg_parts = split_string1(uri, /\?/);
 	if ( 2 in arg_parts )
 		{
-		local args = split_all(arg_parts[2], /\&/);
+		local args = split_string_all(arg_parts[2], /\&/);
 		local loggable=F;
 		for ( i in args )
 			{
