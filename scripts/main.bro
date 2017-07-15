@@ -103,51 +103,50 @@ function hex_to_time(hex: string): time
 function fix_file_name(fname: string): string
 	{
 	local parts = split_string_all(fname, /_/);
-	if ( /[eE][xX][eE]/ == parts[|parts|] ||
-	     /[dD][lL][lL]/ == parts[|parts|] )
+	if ( /[eE][xX][eE]/ == parts[|parts|-1] ||
+	     /[dD][lL][lL]/ == parts[|parts|-1] )
 		{
-		parts[|parts|-1] = ".";
+		parts[|parts|-2] = ".";
 		}
-	return cat_string_array(parts);
+	return join_string_vec(parts, "");
 	}
 
 function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 	{
 	local parts = split_string_all(uri, /\//);
-
-	if ( parts[5] == "Generic" )
+	if ( parts[4] == "Generic" )
 		{
-		if ( parts[7] in software_parsed_generics )
+		if ( parts[6] in software_parsed_generics )
 			{
-			local fname = fix_file_name(parts[9]);
-			local version_numbers = split_string_n(parts[11], /_/, F, 4);
+			local fname = fix_file_name(parts[8]);
+			local version_numbers = split_string_n(parts[10], /_/, F, 4);
 
 			local v: Software::Version;
-			if ( 4 in version_numbers && version_numbers[4] != "" )
-				v$minor3 = extract_count(version_numbers[4]);
-			if ( 3 in version_numbers && version_numbers[3] != "" )
-				v$minor2 = extract_count(version_numbers[3]);
-			if ( 2 in version_numbers && version_numbers[2] != "" )
-				v$minor = extract_count(version_numbers[2]);
-			if ( 1 in version_numbers && version_numbers[1] != "" )
-				v$major = extract_count(version_numbers[1]);
+			if ( 4 in version_numbers && version_numbers[3] != "" )
+				v$minor3 = extract_count(version_numbers[3]);
+			if ( 3 in version_numbers && version_numbers[2] != "" )
+				v$minor2 = extract_count(version_numbers[2]);
+			if ( 2 in version_numbers && version_numbers[1] != "" )
+				v$minor = extract_count(version_numbers[1]);
+			if ( 1 in version_numbers && version_numbers[0] != "" )
+				v$major = extract_count(version_numbers[0]);
 
 			Software::found(id, [$host=id$orig_h, 
-			                     $unparsed_version=cat(fname, "-", parts[11]), 
+			                     $unparsed_version=cat(fname, "-", parts[10]), 
 			                     $software_type=Software::MICROSOFT,
 			                     $name=fname, 
 			                     $version=v]);
 			}
 	
-		if ( /^PnP/ in  parts[7] && /^..._VID_/ in parts[11] )
+		if ( /^PnP/ in  parts[7] && /^..._VID_/ in parts[10] )
 			{
 			# It's a hardware disclosure.
-			local vid_pid_parts = split_string_n(parts[11], /_/, F, 5);
+			local vid_pid_parts = split_string_n(parts[10], /_/, F, 5);
 			if ( |vid_pid_parts| >= 5 )
 				{
-				local vid = vid_pid_parts[3];
-				local pid = vid_pid_parts[5];
-				if ( /^PCI_VEN_/ in parts[11] )
+				local vid = vid_pid_parts[2];
+				local pid = vid_pid_parts[4];
+				if ( /^PCI_VEN_/ in parts[10] )
 					{
 					Hardware::seen([$ts=network_time(), $uid=cuid, $host=id$orig_h, 
 					                $h_type=Hardware::TYPE_PCI,
@@ -159,7 +158,7 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 					#		print "    -> PCI: ", Hardware::devices[Hardware::TYPE_PCI, vid, pid];
 					#	}
 					}
-				else if ( /^USB_VID_/ in parts[11] )
+				else if ( /^USB_VID_/ in parts[10] )
 					{
 					Hardware::seen([$ts=network_time(), $uid=cuid, $host=id$orig_h,
 					                $h_type=Hardware::TYPE_USB,
@@ -177,18 +176,18 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 		}
 	else # It's a software crash report.
 		{
-		local app = Application($name=fix_file_name(parts[5]), 
-		                        $version=gsub(parts[7], /_/, "."),
-		                        $timestamp=hex_to_time(parts[9]));
-		local mod = Application($name=fix_file_name(parts[11]), 
-		                        $version=gsub(parts[13], /_/, "."), 
-		                        $timestamp=hex_to_time(parts[15]));
+		local app = Application($name=fix_file_name(parts[4]), 
+		                        $version=gsub(parts[6], /_/, "."),
+		                        $timestamp=hex_to_time(parts[8]));
+		local mod = Application($name=fix_file_name(parts[10]), 
+		                        $version=gsub(parts[12], /_/, "."), 
+		                        $timestamp=hex_to_time(parts[14]));
 		local ci = CrashInfo($ts=network_time(),
 		                     $host=id$orig_h,
 		                     $app=app, $mod=mod,
-		                     $exception_code=exception_codes[parts[17]]);
+		                     $exception_code=exception_codes[parts[16]]);
 
-		local more_parts = split_string1(parts[19], /\.htm\?/);
+		local more_parts = split_string1(parts[18], /\.htm\?/);
 		if ( 1 in more_parts )
 			{
 			ci$fault_offset = more_parts[1];
@@ -203,9 +202,9 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 
 	local p = PlatformInfo($ts=network_time(), $host=id$orig_h);
 	local arg_parts = split_string1(uri, /\?/);
-	if ( 2 in arg_parts )
+	if ( 1 in arg_parts )
 		{
-		local args = split_string_all(arg_parts[2], /\&/);
+		local args = split_string_all(arg_parts[1], /\&/);
 		local loggable=F;
 		for ( i in args )
 			{
