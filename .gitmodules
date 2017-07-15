@@ -1,3 +1,0 @@
-[submodule "vendor/bro-hardware"]
-	path = vendor/bro-hardware
-	url = https://github.com/corelight/bro-hardware.git
