@@ -188,9 +188,9 @@ function parse_watson_uri(cuid: string, id: conn_id, uri: string)
 		                     $exception_code=exception_codes[parts[16]]);
 
 		local more_parts = split_string1(parts[18], /\.htm\?/);
-		if ( 1 in more_parts )
+		if ( 0 in more_parts )
 			{
-			ci$fault_offset = more_parts[1];
+			ci$fault_offset = more_parts[0];
 			if ( |ci$fault_offset| == 16 )
 				ci$arch = 64;
 			else if ( |ci$fault_offset| == 8 )

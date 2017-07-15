@@ -2,5 +2,6 @@
 description = Discover and log information discovered in Microsoft Dr. Watson messages.
 tags = drwatson, http, windows
 script_dir = scripts
+test_command = ( cd tests && btest -d )
 depends = 
     https://github.com/corelight/bro-hardware *

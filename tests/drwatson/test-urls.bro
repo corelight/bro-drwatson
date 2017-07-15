@@ -1,4 +1,8 @@
-@load ../
+# @TEST-EXEC: bro  %INPUT
+# @TEST-EXEC: btest-diff microsoftwatson_crash.log
+# @TEST-EXEC: btest-diff microsoftwatson_platform.log
+
+@load ../../../scripts
 
 module MicrosoftWatson;
 
