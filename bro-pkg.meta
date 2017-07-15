@@ -1,5 +1,5 @@
 [package]
-description = Discover and log information discovered in Microsoft Dr. Watson messages.
+description = Discover and log information discovered in Microsoft DrWatson messages.
 tags = drwatson, http, windows
 script_dir = scripts
 test_command = ( cd tests && btest -d )
